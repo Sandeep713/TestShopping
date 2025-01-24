@@ -1,0 +1,18 @@
+{
+    "title": "Automation Exercise",
+    "name": "sandeep",
+    "email":"test012345678@gmail.com",
+    "password":"1234567890",
+    "firstName":"Sandeep",
+    "lastName":"T",
+    "company":"test",
+    "addressOne":"Bangalore",
+    "addressTwo":"Bangalore",
+    "state":"Karnataka",
+    "city":"Bangalore",
+    "zipcode":"123456",
+    "mobile":"123123123123",
+    "successMessage": "ACCOUNT CREATED!",
+    "cartAddedMessage": "Your product has been added to cart",
+    "cartsuccessMessage": "Item added successfully to the cart"
+}
