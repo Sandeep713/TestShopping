@@ -1,7 +1,7 @@
 import elements from '../utils/ElementsUtils';
 
 class AccountInfo {
-  get gender() { return $("//div[@class='radio-inline']//label[@for='id_gender1']"); }
+  get gender() { return $("//input[@id='id_gender1']"); }
   async selectGender() { await elements.click(this.gender); }
 
   get password() { return $("//input[@id='password']"); }

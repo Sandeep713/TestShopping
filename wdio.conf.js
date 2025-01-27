@@ -1,16 +1,29 @@
+const winston = require('winston');
+
+// Set up a logger using winston
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, level, message }) => `[${timestamp}] [${level.toUpperCase()}]: ${message}`)
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/test.log' }),
+  ],
+});
+
 exports.config = {
   runner: 'local',
-  specs: [
-    './test/specs/SignUp.wdio.js'
-  ],
-  maxInstances: 1, // Sequential execution in one browser instance
+  specs: ['./features/**/*.feature'],
+  maxInstances: 1, // Sequential execution
   capabilities: [{ browserName: 'chrome' }],
-  logLevel: 'error',
+  logLevel: 'silent',
   bail: 0,
   waitforTimeout: 10000,
   connectionRetryTimeout: 120000,
   connectionRetryCount: 3,
-  framework: 'mocha',
+  framework: 'cucumber',
   reporters: [
     'spec',
     ['allure', {
@@ -19,17 +32,23 @@ exports.config = {
       disableWebdriverScreenshotsReporting: false,
     }],
   ],
-  mochaOpts: { ui: 'bdd', timeout: 60000 },
-
+  cucumberOpts: {
+    require: ['./test/specs/*.js'], // Path to step definitions
+    backtrace: false,
+    requireModule: [],
+    dryRun: false,
+    failFast: false,
+    snippets: true,
+    source: true,
+    profile: [],
+    strict: false,
+    tagExpression: '',
+    timeout: 60000,
+    ignoreUndefinedDefinitions: false,
+  },
   beforeSuite: async function (suite) {
-    if (suite.file.includes('AccountInfo') || suite.file.includes('AddCart')) {
-      global.isSignUpExecuted = global.isSignUpExecuted || false;
-      if (!global.isSignUpExecuted) {
-        console.log('Executing SignUp class before other tests...');
-        const { runSignUpTest } = require('./test/specs/SignUp.wdio.js');
-        await runSignUpTest();
-        global.isSignUpExecuted = true;
-      }
-    }
+    logger.info('Initializing suite setup...');
   },
 };
+
+module.exports.logger = logger;

@@ -31,6 +31,13 @@ Steps to Set Up the Project
 Running Tests
 Execute All Tests
 * To run the complete E2E workflow: npx wdio run ./wdio.conf.js
+* To run the code and it will generate the test results: npm run test-results
+
+Reports
+Allure Reports
+* Install Allure Command Line if not installed: npm install -g allure-commandline --save-dev
+* Generate and open the report: 
+  npm run allure:report
 
 Execute a Specific Test
 * To run a specific test (e.g., SignUp): npx wdio run ./wdio.conf.js --spec ./test/specs/SignUp.wdio.js
@@ -56,13 +63,6 @@ Configuration
 
 Application URL
 * Located in the AppUrl file
-
-Reports
-Allure Reports
-* Install Allure Command Line if not installed: npm install -g allure-commandline --save-dev
-* Generate and open the report: 
-  allure generate allure-results --clean
-  allure open
 
 Error Handling
 * Screenshots are captured on test pass/fail.

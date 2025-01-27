@@ -1,0 +1,45 @@
+
+Execution of 1 workers started at 2025-01-27T11:10:50.213Z
+
+[0-0] RUNNING in chrome - file:///C:/TestShopping/features/SignUp-workflow.feature
+[0-0] [2025-01-27T11:10:55.156Z] [INFO]: Launching application...
+[0-0] [2025-01-27T11:11:02.157Z] [INFO]: Maximizing browser window...
+[0-0] [2025-01-27T11:11:02.251Z] [INFO]: Executing SignUp workflow...
+[0-0] [2025-01-27T11:11:12.217Z] [INFO]: Success in SignupWorkflow
+[0-0] [2025-01-27T11:11:12.222Z] [INFO]: Workflow validated successfully.
+[0-0] [2025-01-27T11:11:12.260Z] [INFO]: Filling in account info...
+[0-0] [2025-01-27T11:11:42.562Z] [INFO]: Success in AccountInfoWorkflow
+[0-0] [2025-01-27T11:11:42.568Z] [INFO]: Workflow validated successfully.
+[0-0] [2025-01-27T11:11:42.594Z] [INFO]: Adding product to cart...
+[0-0] [2025-01-27T11:11:58.677Z] [INFO]: Success in AddCartWorkflow
+[0-0] [2025-01-27T11:11:58.681Z] [INFO]: Workflow validated successfully.
+[0-0] PASSED in chrome - file:///C:/TestShopping/features/SignUp-workflow.feature
+
+ "spec" Reporter:
+------------------------------------------------------------------
+[chrome 131.0.6778.265 windows #0-0] Running: chrome (v131.0.6778.265) on windows
+[chrome 131.0.6778.265 windows #0-0] Session ID: 12e9d45910f2aee83a6db1c9d5ec3577
+[chrome 131.0.6778.265 windows #0-0]
+[chrome 131.0.6778.265 windows #0-0] » \features\SignUp-workflow.feature
+[chrome 131.0.6778.265 windows #0-0] End-to-End Workflow Tests
+[chrome 131.0.6778.265 windows #0-0] As a user, I want to perform end-to-end tests for SignUp, AccountInfo, and AddCart workflows.
+[chrome 131.0.6778.265 windows #0-0]
+[chrome 131.0.6778.265 windows #0-0] Execute SignUp workflow
+[chrome 131.0.6778.265 windows #0-0]    ✓ Given the application is launched
+[chrome 131.0.6778.265 windows #0-0]    ✓ And the browser window is maximized
+[chrome 131.0.6778.265 windows #0-0]    ✓ When I perform the SignUp workflow
+[chrome 131.0.6778.265 windows #0-0]    ✓ Then the workflow should complete successfully
+[chrome 131.0.6778.265 windows #0-0]
+[chrome 131.0.6778.265 windows #0-0] Execute Account Info workflow
+[chrome 131.0.6778.265 windows #0-0]    ✓ When I perform the Account Info workflow
+[chrome 131.0.6778.265 windows #0-0]    ✓ Then the workflow should complete successfully
+[chrome 131.0.6778.265 windows #0-0]
+[chrome 131.0.6778.265 windows #0-0] Execute AddCart workflow
+[chrome 131.0.6778.265 windows #0-0]    ✓ When I perform the AddCart workflow
+[chrome 131.0.6778.265 windows #0-0]    ✓ Then the workflow should complete successfully
+[chrome 131.0.6778.265 windows #0-0]
+[chrome 131.0.6778.265 windows #0-0] 8 passing (1m 4s)
+
+
+Spec Files:	 1 passed, 1 total (100% completed) in 00:01:09  
+

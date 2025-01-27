@@ -1,123 +1,114 @@
-import SignUp from '../pageobjects/SignUpPage';
-import testdatas from '../resourse/testdatas.json';
-import elements from '../utils/ElementsUtils';
+import { Given, When, Then } from '@wdio/cucumber-framework';
+import SignUp from '../pageobjects/SignUpPage'; // Ensure the import path is correct
 import AccountInfo from '../pageobjects/AccountInfoPage';
 import AddCart from '../pageobjects/AddCartPage';
+import testdatas from '../resourse/testdatas.json';
+import elements from '../utils/ElementsUtils';
 
+// Logging helper
+const logger = require('../../wdio.conf').logger;
 const signup = new SignUp();
 const accountInfo = new AccountInfo();
 const addCart = new AddCart();
 
-describe('E2E Workflow Tests', () => {
-  before(async () => {
-    console.log('Launching application...');
-    await signup.LaunchApp();
-    await browser.maximizeWindow();
-  });
+// Helper for logging test results
+const testLogger = (testName, error) => {
+  if (error) {
+    logger.error(`Error in ${testName}: ${error.message}`);
+    elements.captureFailScreenshot(testName);
+  } else {
+    logger.info(`Success in ${testName}`);
+    elements.capturePassScreenshot(testName);
+  }
+};
 
-  it('SignUp Workflow', async () => {
-    const testName = 'SignupWorkflow';
-    try {
-      console.log('Launching application for SignUp...');
-      await signup.LaunchApp();
-      await browser.maximizeWindow();
+Given(/^the application is launched$/, async () => {
+  logger.info('Launching application...');
+  // Ensure SSL errors are handled if needed (implement filterSSLErrors if necessary)
+  await signup.LaunchApp();  // Use the correct SignUp instance
+});
 
-      const title = await browser.getTitle();
-      console.log(`Page title: ${title}`);
-      expect(title).toContain(testdatas.title);
+Given(/^the browser window is maximized$/, async () => {
+  logger.info('Maximizing browser window...');
+  await browser.maximizeWindow();
+});
 
-      console.log('Executing SignUp workflow...');
-      await elements.clickWithTimeout(signup.signupBtn);
-      await elements.setValueWithTimeout(signup.name, testdatas.name);
-      await elements.setValueWithTimeout(signup.email, testdatas.email);
-      await elements.clickWithTimeout(signup.submitBtn);
+When(/^I perform the SignUp workflow$/, async () => {
+  const testName = 'SignupWorkflow';
+  try {
+    const title = await browser.getTitle();
+    expect(title).toContain(testdatas.title);
 
-      console.log('SignUp workflow completed');
-      await elements.capturePassScreenshot(testName);
-    } catch (error) {
-      console.error('Error during SignUp workflow:', error.message);
-      await elements.captureFailScreenshot(testName);
-      throw error;
-    }
-  });
+    logger.info('Executing SignUp workflow...');
+    await elements.clickWithTimeout(signup.signupBtn); // Correct reference to SignUp object
+    await elements.setValueWithTimeout(signup.name, testdatas.name);  // Correct reference to SignUp object
+    await elements.setValueWithTimeout(signup.email, testdatas.email);  // Correct reference to SignUp object
+    await elements.clickWithTimeout(signup.submitBtn);  // Correct reference to SignUp object
 
-  it('Account Info Workflow', async () => {
-    const testName = 'AccountInfoWorkflow';
-    try {
-      console.log('Selecting gender...');
-      await elements.clickWithTimeout(accountInfo.gender);
+    testLogger(testName);
+  } catch (error) {
+    testLogger(testName, error);
+    throw error;
+  }
+});
 
-      console.log('Entering password...');
-      await elements.setValueWithTimeout(accountInfo.password, testdatas.password);
+When(/^I perform the Account Info workflow$/, async () => {
+  const testName = 'AccountInfoWorkflow';
+  try {
+    logger.info('Filling in account info...');
+    await elements.clickWithTimeout(accountInfo.gender);
+    await elements.setValueWithTimeout(accountInfo.password, testdatas.password);
+    await elements.clickWithTimeout(accountInfo.day);
+    await elements.clickWithTimeout(accountInfo.month);
+    await elements.clickWithTimeout(accountInfo.year);
 
-      console.log('Selecting date of birth...');
-      await elements.clickWithTimeout(accountInfo.day);
-      await elements.clickWithTimeout(accountInfo.month);
-      await elements.clickWithTimeout(accountInfo.year);
+    await elements.setValueWithTimeout(accountInfo.firstName, testdatas.firstName);
+    await elements.setValueWithTimeout(accountInfo.lastName, testdatas.lastName);
+    await elements.setValueWithTimeout(accountInfo.company, testdatas.company);
+    await elements.setValueWithTimeout(accountInfo.addressOne, testdatas.addressOne);
+    await elements.setValueWithTimeout(accountInfo.addressTwo, testdatas.addressTwo);
+    await elements.setValueWithTimeout(accountInfo.state, testdatas.state);
+    await elements.setValueWithTimeout(accountInfo.city, testdatas.city);
+    await elements.setValueWithTimeout(accountInfo.zipcode, testdatas.zipcode);
+    await elements.setValueWithTimeout(accountInfo.mobile, testdatas.mobile);
 
-      console.log('Entering personal details...');
-      await elements.setValueWithTimeout(accountInfo.firstName, testdatas.firstName);
-      await elements.setValueWithTimeout(accountInfo.lastName, testdatas.lastName);
+    await elements.clickWithTimeout(accountInfo.createAccount);
+    const successMessage = await accountInfo.getAccountCreatedMessage();
+    expect(successMessage).toContain(testdatas.successMessage);
 
-      console.log('Entering address details...');
-      await elements.setValueWithTimeout(accountInfo.company, testdatas.company);
-      await elements.setValueWithTimeout(accountInfo.addressOne, testdatas.addressOne);
-      await elements.setValueWithTimeout(accountInfo.addressTwo, testdatas.addressTwo);
-      await elements.setValueWithTimeout(accountInfo.state, testdatas.state);
-      await elements.setValueWithTimeout(accountInfo.city, testdatas.city);
-      await elements.setValueWithTimeout(accountInfo.zipcode, testdatas.zipcode);
-      await elements.setValueWithTimeout(accountInfo.mobile, testdatas.mobile);
+    await elements.clickWithTimeout(accountInfo.continueBtn);
+    testLogger(testName);
+  } catch (error) {
+    testLogger(testName, error);
+    throw error;
+  }
+});
 
-      console.log('Submitting account creation form...');
-      await elements.clickWithTimeout(accountInfo.createAccount);
+When(/^I perform the AddCart workflow$/, async () => {
+  const testName = 'AddCartWorkflow';
+  try {
+    logger.info('Adding product to cart...');
+    await elements.clickWithTimeout(addCart.viewProduct);
+    const productInformation = await addCart.ProductinformationText();
 
-      const successMessage = await accountInfo.getAccountCreatedMessage();
-      console.log(`Success message: ${successMessage}`);
-      expect(successMessage).toContain(testdatas.successMessage);
+    await elements.clickWithTimeout(addCart.addCart);
+    const cartModalText = await addCart.getCartModalText();
+    expect(cartModalText).toContain(testdatas.cartAddedMessage);
 
-      await elements.clickWithTimeout(accountInfo.continueBtn);
-      console.log('Account Info workflow completed.');
-      await elements.capturePassScreenshot(testName);
-    } catch (error) {
-      console.error('Error during Account Info workflow:', error.message);
-      await elements.captureFailScreenshot(testName);
-      throw error;
-    }
-  });
+    await elements.clickWithTimeout(addCart.continueShopping);
+    await elements.clickWithTimeout(addCart.cart);
+    await elements.clickWithTimeout(addCart.proceedCheckout);
 
-  it('AddCart Workflow', async () => {
-    const testName = 'AddCartWorkflow';
-    try {
-      console.log('Viewing product...');
-      await elements.clickWithTimeout(addCart.viewProduct);
-      const productInformation = await addCart.ProductinformationText();
-      console.log(`Product Information: ${productInformation}`);
-  
-      console.log('Adding product to cart...');
-      await elements.clickWithTimeout(addCart.addCart); 
-  
-      console.log('Validating cart modal...');
-      const cartModalText = await addCart.getCartModalText();
-      expect(cartModalText).toContain(testdatas.cartAddedMessage);
-  
-      await elements.clickWithTimeout(addCart.continueShopping);
-  
-      console.log('Navigating to cart...');
-      await elements.clickWithTimeout(addCart.cart);
-  
-      console.log('Proceed to Checkout...');
-      await elements.clickWithTimeout(addCart.proceedCheckout);
-  
-      console.log('Finalizing checkout...');
-      const checkOutCartItemText = await addCart.getCheckoutCartItemText();
-      expect(checkOutCartItemText).toContain(productInformation);
-      console.log(`Check out Cart Item: ${checkOutCartItemText}`);
-      console.log('AddCart workflow completed');
-      await elements.capturePassScreenshot(testName);
-    } catch (error) {
-      console.error('Error during AddCart workflow:', error.message);
-      await elements.captureFailScreenshot(testName);
-      throw error;
-    }
-  });
+    const checkOutCartItemText = await addCart.getCheckoutCartItemText();
+    expect(checkOutCartItemText).toContain(productInformation);
+
+    testLogger(testName);
+  } catch (error) {
+    testLogger(testName, error);
+    throw error;
+  }
+});
+
+Then(/^the workflow should complete successfully$/, () => {
+  logger.info('Workflow validated successfully.');
 });
